@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog 
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext classpath:/liquibase/dbchangelog-ext.xsd 
+    http://www.liquibase.org/xml/ns/dbchangelog classpath:/liquibase/dbchangelog-3.6.xsd">
+    <changeSet author="marceloverdijk" id="1">
+    	<createTable tableName="organiztion" remarks="组织">
+    		<column name="id" type="int" autoIncrement="true" remarks="id">
+    			<constraints primaryKey="true" nullable="false"/>
+    		</column>
+    		<column name="name" type="varchar(255)" remarks="名称">
+    			<constraints nullable="false"/>
+    		</column>
+    		<column name="address" type="varchar(255)" remarks="地址">
+    			<constraints nullable="false"/>
+    		</column>
+    		
+    	</createTable>
+    	<comment>创建组织信息</comment>
+    </changeSet>
+</databaseChangeLog>
