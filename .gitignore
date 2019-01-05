@@ -12,3 +12,7 @@
 *.out
 
 .idea/
+
+main.exe
+/packrd
+main-packr.go
