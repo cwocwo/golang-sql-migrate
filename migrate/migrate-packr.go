@@ -2,6 +2,6 @@
 
 // You can use the "packr clean" command to clean up this,
 // and any other packr generated files.
-package main
+package migrate
 
-import _ "github.com/cwocwo/golang-sql-migrate/main/packrd"
+import _ "github.com/cwocwo/golang-sql-migrate/packrd"
