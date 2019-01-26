@@ -12,27 +12,35 @@ import (
 	"time"
 )
 
-func CloneRepo(programName string, changelogDir string, gitServerAddr string) {
+func CloneRepo(repoName string, changelogDir string, gitServerAddr string) {
 	gitBaseUrl := gitServerAddr + "git-repos/"
 
 	httpClient := &http.Client{}
 
-	request, err := http.NewRequest("GET", gitBaseUrl + programName , nil)
+	request, err := http.NewRequest("GET", gitBaseUrl + repoName , nil)
 	request.Header.Set("Accept", "application/json")
-	response, _ := httpClient.Do(request)
-	body, _ := ioutil.ReadAll(response.Body)
-	fmt.Println(string(body))
+	response, err := httpClient.Do(request)
+
+	if CheckIfError(err, "Get repo info.") {
+		return
+	}
+
+	body, err := ioutil.ReadAll(response.Body)
+	if CheckIfError(err, "Read response body of repo info.") {
+		return
+	}
+	log.Printf("Get repo %s: %s", repoName, string(body))
 	status := response.StatusCode
 	fmt.Println(status)
 
 	if len(body) == 0 {
-		log.Printf("The repo %s is not exists.", programName)
+		log.Printf("The repo %s is not exists.", repoName)
 		//var clusterinfo = url.Values{}
 		////var clusterinfo = map[string]string{}
 		//clusterinfo.Add("name", programName)
 		//data := clusterinfo.Encode()
 
-		data := bytes.NewBuffer([]byte(`{"name": "` + programName + `"}`))
+		data := bytes.NewBuffer([]byte(`{"name": "` + repoName + `"}`))
 		createRepoRequest, err := http.NewRequest("POST", gitBaseUrl, data)
 		createRepoRequest.Header.Set("Accept", "application/json")
 		createRepoRequest.Header.Set("Content-Type", "application/json")
@@ -45,7 +53,7 @@ func CloneRepo(programName string, changelogDir string, gitServerAddr string) {
 	}
 
 	//clone repo
-	repoUrl := gitServerAddr +"git/" + programName + ".git"
+	repoUrl := gitServerAddr +"git/" + repoName + ".git"
 	//repoUrl = "http://localhost:8090/git/test"
 
 	log.Printf("git clone %s %s --recursive", repoUrl, changelogDir)

@@ -44,7 +44,26 @@ func Init(path ... string) *packr.Box {
 	return packr.New(PackrChangLogBox, changelogPath)
 }
 
-func MigrateChangeLogsWithServer(programName string, serverAddr string, migrate Migrate)  {
+func DoMigrate(migrateServerAddr string, m Migrate, programName ... string) {
+	repoName :=  strings.Replace(os.Args[0], ".", "-", -1)
+	if len(programName) > 0 && programName[0] != "" {
+		repoName = programName[0]
+	}
+	log.Printf("Use %s as repo name.", repoName)
+	if m.Changelog == "" {
+		m.Changelog = repoName
+	}
+	pathSeparator := string(os.PathSeparator)
+	changelogDir := os.TempDir() + pathSeparator + "sql-changelogs" + pathSeparator + repoName + pathSeparator
+	log.Printf("The change log dir is: %s", changelogDir)
+	CloneRepo(repoName, changelogDir, migrateServerAddr)
+	ExtractChangeLogs(changelogDir)
+	CommitChangeLogs(changelogDir)
+
+	DoMigrateWithServer(migrateServerAddr, m)
+}
+
+func DoMigrateWithServer(serverAddr string, migrate Migrate)  {
 
 	migrateData, err := json.Marshal(migrate)
 	if CheckIfError(err, "migrate to json.") {

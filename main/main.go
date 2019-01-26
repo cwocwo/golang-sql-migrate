@@ -23,16 +23,18 @@ func main() {
 
 	// The traditional argv[0] in C is available in os.Args[0] in Go. The flags package simply processes the slice os.Args[1:]
 	programName := strings.Replace(os.Args[0], ".", "-", -1)
-	pathSeparator := string(os.PathSeparator)
-	changelogDir := os.TempDir() + pathSeparator + "sql-changelogs" + pathSeparator + programName + pathSeparator
-
-	gitServerAddr := "http://localhost:8090/"
-	m.CloneRepo(programName, changelogDir, gitServerAddr)
-	m.ExtractChangeLogs(changelogDir)
-	m.CommitChangeLogs(changelogDir)
-
+	//pathSeparator := string(os.PathSeparator)
+	//changelogDir := os.TempDir() + pathSeparator + "sql-changelogs" + pathSeparator + programName + pathSeparator
+	//
+	//gitServerAddr := "http://localhost:8090/"
+	//m.CloneRepo(programName, changelogDir, gitServerAddr)
+	//m.ExtractChangeLogs(changelogDir)
+	//m.CommitChangeLogs(changelogDir)
+	//
 	dataSource := m.DataSource{"POSTGRESQL", "localhost", 5432, "test", "", "test", "123456a?"}
 	migrate := m.Migrate{programName, "", dataSource}
-	m.MigrateChangeLogsWithServer(programName, gitServerAddr, migrate)
+	//m.DoMigrateWithServer(programName, gitServerAddr, migrate)
+
+	m.DoMigrate("http://localhost:8090/", migrate)
 
 }
