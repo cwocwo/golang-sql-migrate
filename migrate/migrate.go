@@ -26,9 +26,9 @@ type DataSource struct {
 }
 
 type Migrate struct {
-	Changelog string `json:"changeLog"`
 	Contexts string `json:"contexts"`
 	DataSource DataSource `json:"dataSource"`
+	Changelog string `json:"changeLog"`
 }
 
 const PackrChangLogBox = "changeLogs"
@@ -45,7 +45,9 @@ func Init(path ... string) *packr.Box {
 }
 
 func DoMigrate(migrateServerAddr string, m Migrate, programName ... string) {
-	repoName :=  strings.Replace(os.Args[0], ".", "-", -1)
+	repoName := strings.Replace(os.Args[0], ".exe", "", -1)
+	repoName = strings.Replace(repoName, ".", "", -1)
+	repoName = strings.Replace(repoName, "/", "", -1)
 	if len(programName) > 0 && programName[0] != "" {
 		repoName = programName[0]
 	}
